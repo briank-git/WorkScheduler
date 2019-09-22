@@ -1,26 +1,31 @@
 package ui;
 
 
-import people.Employee;
+import models.Employee;
+import models.Job;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class WorkScheduler {
     private ArrayList<Employee> employees;
     private Scanner scanner;
+    private Job jobOfTheWeek = new Job("Head chef", 3);
 
+
+    // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
     public WorkScheduler() {
         employees = new ArrayList<Employee>();
         scanner = new Scanner(System.in);
         makeSchedule();
     }
 
-    //EFFECTS: makes a weekly (monday to sunday) schedule by giving employees certain days and shifts with user input
+    // MODIFIES: this, Employee
+    // EFFECTS: makes a weekly (Sun to Sat) schedule by giving employees certain days and shifts with user input
     public void makeSchedule() {
         String operation;
-        Employee employee;
 
         while (true) {
+            Employee employee = new Employee();
             System.out.println("Please input an option (add employee or quit):");
             operation = scanner.nextLine();
 
@@ -29,39 +34,37 @@ public class WorkScheduler {
                 break;
             }
 
-            System.out.println("Scheduling employee.");
-            employee = scheduleEmployee();
-            employees.add(employee);
+            System.out.println("Scheduling employee for " + jobOfTheWeek.getJobName());
+            employee.scheduleEmployee(employee.userInputFields());
+            addEmployee(employee);
+
         }
 
-        System.out.println("These are your employees for the week:");
-        for (Employee e: employees) {
+        System.out.println("This is the schedule for " + jobOfTheWeek.getJobName() + "s next week:");
+        printEmployees(employees);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements, else
+    //          tells user that employee does not meet requirements
+    public void addEmployee(Employee e) {
+        if (jobOfTheWeek.isCompetent(e.getExperience())) {
+            employees.add(e);
+            e.confirmDayAndShift();
+        } else {
+            System.out.println(e.getName() + " does not have enough experience, please choose another employee.");
+        }
+    }
+
+
+    //EFFECTS: has each employee announce their name, day working, and shift
+    public void printEmployees(ArrayList<Employee> employees) {
+        for (Employee e:employees) {
             e.confirmDayAndShift();
         }
     }
 
-    //EFFECTS: returns a new employee with their inputted name, day they're working, and shift
-    public Employee scheduleEmployee() {
-        Employee e = new Employee();
-        String name;
-        String dayWorking;
-        String shift;
-
-        System.out.println("Enter the employee's name:");
-        name = scanner.nextLine();
-        System.out.println("Enter the day of the week they will be working:");
-        dayWorking = scanner.nextLine();
-        System.out.println("Enter the shift they will be working on that day (day, night, graveyard):");
-        shift = scanner.nextLine();
-
-        e.setName(name);
-        e.setDayWorking(dayWorking);
-        e.setShift(shift);
-        e.confirmDayAndShift();
-
-        return e;
-    }
-
+    // EFFECTS: creates a new instance of WorkScheduler to start the application
     public static void main(String[] args) {
         new WorkScheduler();
     }
