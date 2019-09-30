@@ -1,10 +1,12 @@
-package models;
+package model;
 
 public class Job {
     private String jobName;
     private int difficulty;
 
-    //EFFECTS: creates a job and replaces fields with default values
+    //REQUIRES: difficulty is a positive integer or zero
+    //MODIFIES: this
+    //EFFECTS: creates a job and sets fields with input parameters
     public Job(String jobName, int difficulty) {
         this.jobName = jobName;
         this.difficulty = difficulty;
@@ -22,7 +24,7 @@ public class Job {
     }
 
     //MODIFIES: this
-    //EFFECTS: sets field difficulty, negative inputs are set to zero
+    //EFFECTS: sets field difficulty to a positive integer or zero
     public void setDifficulty(int difficulty) {
         if (difficulty < 0) {
             this.difficulty = 0;

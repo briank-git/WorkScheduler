@@ -1,6 +1,6 @@
 package TestPackage;
 
-import models.Employee;
+import model.Employee;
 
 
 import org.junit.jupiter.api.BeforeEach;

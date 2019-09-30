@@ -1,4 +1,5 @@
-package models;
+package model;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class Employee {
         this.name = name;
     }
 
-    // REQUIRES: must be one of the days of the week Sunday to Saturday
+    // REQUIRES: must be one of the days of the week Sun to Sat
     // MODIFIES: this
     // EFFECTS: sets the dayWorking of this
     public void setDayWorking(String dayWorking) {
@@ -45,7 +46,7 @@ public class Employee {
     }
 
     // MODIFIES: this
-    // EFFECTS: sets the experience level of this, negative inputs are set to zero
+    // EFFECTS: sets the experience level of this to a positive integer or zero
     public void setExperience(int exp) {
         if (exp < 0) {
             this.experience = 0;
@@ -80,10 +81,9 @@ public class Employee {
         System.out.println(name + " will be working on " + dayWorking + " " + shift + " shift.");
     }
 
-    // REQUIRES: input list is of size 4 and name, dayWorking, and shift are not empty and have
-    // valid inputs (Sun to Sat) for dayWorking and day, night, graveyard for shift.
+    // REQUIRES: input has size 4
     // MODIFIES: this
-    // EFFECTS: takes list of user input, sets fields of this to input, and then
+    // EFFECTS: takes list of field values, sets fields of this to those found in list, and then
     //          returns this
     public Employee scheduleEmployee(ArrayList<String> fields) {
 //        ArrayList<String> userInput = userInputFields();
