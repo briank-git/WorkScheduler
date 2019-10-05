@@ -9,8 +9,7 @@ public abstract class Employee {
     protected String dayWorking;
     protected String shift;
     protected int experience;
-    protected ArrayList<String> days = new ArrayList<String>(Arrays.asList("sun","mon","tue","wed","thu","fri","sat"));
-    protected ArrayList<String> shifts = new ArrayList<String>(Arrays.asList("day","night","graveyard"));
+
 
     protected static Scanner scanner = new Scanner(System.in);
 
@@ -90,8 +89,4 @@ public abstract class Employee {
     // REQUIRES: fields dayWorking, shift, and name are not empty
     // EFFECTS: prints out which day and which shift they are working
     public abstract void confirmDayAndShift();
-
-    // EFFECTS: returns a list using user input (name, dayWorking, shift, and experience), input is redone if it's
-    //          empty or is not contained in the list of days or shifts.
-    public abstract ArrayList<String> userInputFields();
 }

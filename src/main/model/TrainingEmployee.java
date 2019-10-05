@@ -19,33 +19,6 @@ public class TrainingEmployee extends Employee {
         System.out.println(name + " will be training on " + dayWorking + " " + shift + " shift.");
     }
 
-    // EFFECTS: returns a list using user input (name, dayWorking, shift), input is redone if it's
-    //          empty or is not contained in the list of days or shifts. Experience stays at default 0.
-    //          Adds 50 training points.
-    @Override
-    public ArrayList<String> userInputFields() {
-        ArrayList<String> input = new ArrayList<String>();
-
-        while (true) {
-
-            System.out.println("Enter the training employee's name:");
-            input.add(0, scanner.nextLine());
-            System.out.println("Enter the 3 letter day of the week they will be training (sun to sat):");
-            input.add(1, scanner.nextLine());
-            System.out.println("Enter the shift they will be training on that day (day, night, graveyard):");
-            input.add(2, scanner.nextLine());
-            input.add(3, "0");
-            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty()) {
-                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
-                    break;
-                }
-            }
-            System.out.println("Day working or shift were empty or did not have expected values. Please try again.");
-        }
-        addTrainingPoints();
-        addExperiencePoints();
-        return input;
-    }
 
     //EFFECTS: checks if a regular employee has enough experience (at least 5) to train the training employee
     public boolean isSuitableTrainer(Employee e) {

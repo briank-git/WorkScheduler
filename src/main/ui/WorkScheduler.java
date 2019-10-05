@@ -22,6 +22,8 @@ public class WorkScheduler implements Saveable, Loadable {
     private Scanner scanner;
     private Job job = new Job("driver", 3);
     PrintWriter writer;
+    private ArrayList<String> days = new ArrayList<String>(Arrays.asList("sun","mon","tue","wed","thu","fri","sat"));
+    private ArrayList<String> shifts = new ArrayList<String>(Arrays.asList("day","night","graveyard"));
 
     //MODIFIES:this
     // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
@@ -70,15 +72,15 @@ public class WorkScheduler implements Saveable, Loadable {
     private void operationAtHelper() {
         TrainingEmployee te = new TrainingEmployee();
         System.out.println("Scheduling trainee for " + job.getJobName());
-        te.scheduleEmployee(te.userInputFields());
+        te.scheduleEmployee(userInputFieldsTrainingEmployee(te));
         addTrainingEmployee(te);
     }
 
     private void operationAreHelper() {
-        RegularEmployee employee = new RegularEmployee();
+        RegularEmployee re = new RegularEmployee();
         System.out.println("Scheduling employee for " + job.getJobName());
-        employee.scheduleEmployee(employee.userInputFields());
-        addEmployee(employee);
+        re.scheduleEmployee(userInputFieldsRegEmployee(re));
+        addEmployee(re);
     }
 
 
@@ -104,6 +106,8 @@ public class WorkScheduler implements Saveable, Loadable {
             if (e.getDayWorking().equals(te.getDayWorking())
                     & e.getShift().equals(te.getShift()) & te.isSuitableTrainer(e)) {
                 te.confirmDayAndShift();
+                te.addTrainingPoints();
+                te.addExperiencePoints();
                 employees.add(te);
                 return true;
             }
@@ -150,6 +154,52 @@ public class WorkScheduler implements Saveable, Loadable {
     public static ArrayList<String> splitOnSpace(String line) {
         String[] splits = line.split(" ");
         return new ArrayList<>(Arrays.asList(splits));
+    }
+
+    public ArrayList<String> userInputFieldsTrainingEmployee(TrainingEmployee te) {
+        ArrayList<String> input = new ArrayList<String>();
+
+        while (true) {
+
+            System.out.println("Enter the training employee's name:");
+            input.add(0, scanner.nextLine());
+            System.out.println("Enter the 3 letter day of the week they will be training (sun to sat):");
+            input.add(1, scanner.nextLine());
+            System.out.println("Enter the shift they will be training on that day (day, night, graveyard):");
+            input.add(2, scanner.nextLine());
+            input.add(3, "0");
+            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty()) {
+                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
+                    break;
+                }
+            }
+            System.out.println("Day working or shift were empty or did not have expected values. Please try again.");
+        }
+        return input;
+    }
+
+    public ArrayList<String> userInputFieldsRegEmployee(RegularEmployee re) {
+        ArrayList<String> input = new ArrayList<String>();
+
+        while (true) {
+
+            System.out.println("Enter the employee's name:");
+            input.add(0, scanner.nextLine());
+            System.out.println("Enter the 3 letter day of the week they will be working (sun to sat):");
+            input.add(1, scanner.nextLine());
+            System.out.println("Enter the shift they will be working on that day (day, night, graveyard):");
+            input.add(2, scanner.nextLine());
+            System.out.println("Enter the experience level of the employee:");
+            input.add(3, scanner.nextLine());
+            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty() & !input.get(3).isEmpty()) {
+                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
+                    break;
+                }
+            }
+            System.out.println("One of the inputs were empty or did not have expected values. Please try again.");
+        }
+
+        return input;
     }
 
 
