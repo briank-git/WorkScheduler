@@ -1,6 +1,7 @@
 package TestPackage;
 
 import model.Employee;
+import model.RegularEmployee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.Loadable;
@@ -8,14 +9,7 @@ import ui.WorkScheduler;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -35,14 +29,14 @@ public class TestLoadable {
     void testLoad() throws IOException {
         ArrayList<Employee> emps = new ArrayList<Employee>();
         ArrayList<Employee> loadedEmployees;
-        Employee employee0 = new Employee();
+        RegularEmployee employee0 = new RegularEmployee();
         employee0.setName("Max");
         employee0.setDayWorking("Tue");
         employee0.setShift("night");
         employee0.setExperience(11);
         emps.add(employee0);
 
-        Employee employee1 = new Employee();
+        RegularEmployee employee1 = new RegularEmployee();
         employee1.setName("John");
         employee1.setDayWorking("Sun");
         employee1.setShift("day");

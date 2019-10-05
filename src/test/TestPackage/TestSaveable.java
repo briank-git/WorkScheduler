@@ -1,6 +1,7 @@
 package TestPackage;
 
 import model.Employee;
+import model.RegularEmployee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ui.Saveable;
@@ -32,14 +33,14 @@ public class TestSaveable {
     void testSave() throws IOException {
         ArrayList<Employee> emps = new ArrayList<Employee>();
         ArrayList<Employee> savedEmployees = new ArrayList<Employee>();
-        Employee employee0 = new Employee();
+        RegularEmployee employee0 = new RegularEmployee();
         employee0.setName("Joey");
         employee0.setDayWorking("Wed");
         employee0.setShift("night");
         employee0.setExperience(5);
         emps.add(employee0);
 
-        Employee employee1 = new Employee();
+        RegularEmployee employee1 = new RegularEmployee();
         employee1.setName("Trish");
         employee1.setDayWorking("Sat");
         employee1.setShift("graveyard");
@@ -49,7 +50,7 @@ public class TestSaveable {
 
         List<String> lines = Files.readAllLines(Paths.get("outputfile.txt"));
         for (String line : lines) {
-            Employee e = new Employee();
+            RegularEmployee e = new RegularEmployee();
             ArrayList<String> partsOfLine = splitOnSpace(line);
             e.setName(partsOfLine.get(0));
             e.setDayWorking(partsOfLine.get(1));

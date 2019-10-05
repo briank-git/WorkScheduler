@@ -1,6 +1,7 @@
 package ui;
 
 import model.Employee;
+import model.RegularEmployee;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;

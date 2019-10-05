@@ -1,6 +1,6 @@
 package TestPackage;
 
-import model.Employee;
+import model.RegularEmployee;
 
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,12 +11,12 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestEmployee {
-    Employee e;
+public class TestRegularEmployee {
+    RegularEmployee e;
 
     @BeforeEach
     public void makeEmployee() {
-        e = new Employee();
+        e = new RegularEmployee();
     }
 
     @Test
