@@ -1,7 +1,6 @@
 package ui;
 
 import model.*;
-import sun.invoke.empty.Empty;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
