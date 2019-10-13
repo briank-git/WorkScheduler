@@ -1,6 +1,7 @@
 package TestPackage;
 
 import model.Employee;
+import model.NegativeInputException;
 import model.RegularEmployee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class TestLoadable {
     }
 
     @Test
-    void testLoad() throws IOException {
+    void testLoad() throws IOException, NegativeInputException {
         ArrayList<Employee> emps = new ArrayList<Employee>();
         ArrayList<Employee> loadedEmployees;
         RegularEmployee employee0 = new RegularEmployee();

@@ -1,9 +1,7 @@
 package ui;
 
-import model.Employee;
-import model.TrainingEmployee;
-import model.RegularEmployee;
-import model.Job;
+import model.*;
+import sun.invoke.empty.Empty;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,16 +18,21 @@ import java.util.Scanner;
 public class WorkScheduler implements Saveable, Loadable {
     private ArrayList<Employee> employees;
     private Scanner scanner;
-    private Job job = new Job("driver", 3);
+    private Job job;
     PrintWriter writer;
-    private ArrayList<String> days = new ArrayList<String>(Arrays.asList("sun","mon","tue","wed","thu","fri","sat"));
-    private ArrayList<String> shifts = new ArrayList<String>(Arrays.asList("day","night","graveyard"));
+    private ArrayList<String> days = new ArrayList<>(Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat"));
+    private ArrayList<String> shifts = new ArrayList<>(Arrays.asList("day", "night", "graveyard"));
 
     //MODIFIES:this
     // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
     public WorkScheduler() {
         employees = new ArrayList<Employee>();
         scanner = new Scanner(System.in);
+        try {
+            job = new Job("driver", 3);
+        } catch (NegativeInputException ne) {
+            System.out.println("Difficulty is negative.");
+        }
     }
 
     public ArrayList<Employee> getEmployees() {
@@ -72,25 +75,43 @@ public class WorkScheduler implements Saveable, Loadable {
     private void operationAtHelper() {
         TrainingEmployee te = new TrainingEmployee();
         System.out.println("Scheduling trainee for " + job.getJobName());
-        te.scheduleEmployee(userInputFieldsTrainingEmployee(te));
+        try {
+            te.scheduleEmployee(userInputFieldsTrainingEmployee(te));
+        } catch (ArraySizeException e) {
+            System.out.println("Size of array too long.");
+        }
         addTrainingEmployee(te);
     }
 
     private void operationAreHelper() {
         RegularEmployee re = new RegularEmployee();
         System.out.println("Scheduling employee for " + job.getJobName());
-        re.scheduleEmployee(userInputFieldsRegEmployee(re));
-        addEmployee(re);
+        try {
+            re.scheduleEmployee(userInputFieldsRegEmployee(re));
+        } catch (ArraySizeException e) {
+            System.out.println("Size of array too long.");
+        }
+        try {
+            addEmployee(re);
+        } catch (NegativeInputException ne) {
+            System.out.println("Experience is negative");
+        }
     }
 
 
     // MODIFIES: this
     // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements returns true,
     //          else tells user that employee does not meet requirements returns false
-    public boolean addEmployee(Employee e) {
+    public boolean addEmployee(Employee e) throws NegativeInputException {
         if (job.isCompetent(e.getExperience())) {
             employees.add(e);
-            e.confirmDayAndShift();
+            try {
+                e.confirmDayAndShift();
+            } catch (EmptyFieldException ex) {
+                System.out.println("One of the fields are empty.");
+            } finally {
+                System.out.println("Attempting to add employee.");
+            }
             return true;
         } else {
             System.out.println(e.getName() + " does not have at least " + job.getDifficulty() + " experience.");
@@ -105,7 +126,11 @@ public class WorkScheduler implements Saveable, Loadable {
         for (Employee e : employees) {
             if (e.getDayWorking().equals(te.getDayWorking())
                     & e.getShift().equals(te.getShift()) & te.isSuitableTrainer(e)) {
-                te.confirmDayAndShift();
+                try {
+                    te.confirmDayAndShift();
+                } catch (EmptyFieldException ef) {
+                    System.out.println("One of the fields are empty.");
+                }
                 te.addTrainingPoints();
                 te.addExperiencePoints();
                 employees.add(te);
@@ -120,7 +145,11 @@ public class WorkScheduler implements Saveable, Loadable {
     //EFFECTS: has each employee announce their name, day working, and shift
     public void printEmployees(ArrayList<Employee> employees) {
         for (Employee e : employees) {
-            e.confirmDayAndShift();
+            try {
+                e.confirmDayAndShift();
+            } catch (EmptyFieldException ef) {
+                System.out.println("One of the fields are empty.");
+            }
         }
     }
 
@@ -143,7 +172,11 @@ public class WorkScheduler implements Saveable, Loadable {
             e.setName(partsOfLine.get(0));
             e.setDayWorking(partsOfLine.get(1));
             e.setShift(partsOfLine.get(2));
-            e.setExperience(Integer.parseInt(partsOfLine.get(3)));
+            try {
+                e.setExperience(Integer.parseInt(partsOfLine.get(3)));
+            } catch (NegativeInputException ne) {
+                System.out.println("Experience is negative.");
+            }
             employees.add(e);
         }
 

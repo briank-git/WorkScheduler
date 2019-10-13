@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public abstract class Employee {
@@ -26,14 +25,12 @@ public abstract class Employee {
         this.name = name;
     }
 
-    // REQUIRES: must be one of the days of the week Sun to Sat
     // MODIFIES: this
     // EFFECTS: sets the dayWorking of this
     public void setDayWorking(String dayWorking) {
         this.dayWorking = dayWorking;
     }
 
-    // REQUIRES: must be one of shifts day, night, graveyard
     // MODIFIES: this
     // EFFECTS: sets the shift of this
     public void setShift(String shift) {
@@ -42,22 +39,22 @@ public abstract class Employee {
 
     // MODIFIES: this
     // EFFECTS: sets the experience level of this to a positive integer or zero
-    public void setExperience(int exp) {
+    public void setExperience(int exp) throws NegativeInputException {
         if (exp < 0) {
-            this.experience = 0;
+            throw new NegativeInputException();
         } else {
             this.experience = exp;
         }
     }
 
-
-    // REQUIRES: input has size 4
     // MODIFIES: this
     // EFFECTS: takes list of field values, sets fields of this to those found in list, and then
     //          returns this
-    public Employee scheduleEmployee(ArrayList<String> fields) {
+    public Employee scheduleEmployee(ArrayList<String> fields) throws ArraySizeException {
 //        ArrayList<String> userInput = userInputFields();
-
+        if (fields.size() > 4) {
+            throw new ArraySizeException();
+        }
         name = fields.get(0);
         dayWorking = fields.get(1);
         shift = fields.get(2);
@@ -86,7 +83,10 @@ public abstract class Employee {
         return this.experience;
     }
 
-    // REQUIRES: fields dayWorking, shift, and name are not empty
     // EFFECTS: prints out which day and which shift they are working
-    public abstract void confirmDayAndShift();
+    public void confirmDayAndShift() throws EmptyFieldException {
+        if (dayWorking == null | shift == null | name == null) {
+            throw new EmptyFieldException();
+        }
+    }
 }

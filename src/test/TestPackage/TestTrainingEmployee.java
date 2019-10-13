@@ -1,5 +1,7 @@
 package TestPackage;
 
+import model.EmptyFieldException;
+import model.NegativeInputException;
 import model.RegularEmployee;
 import model.TrainingEmployee;
 
@@ -20,7 +22,7 @@ public class TestTrainingEmployee {
     }
 
     @Test
-    public void testIsSuitableTrainerTrue() {
+    public void testIsSuitableTrainerTrue() throws NegativeInputException {
         RegularEmployee re = new RegularEmployee();
         re.setName("rich");
         re.setDayWorking("Wed");
@@ -30,7 +32,7 @@ public class TestTrainingEmployee {
     }
 
     @Test
-    public void testIsSuitableTrainerFalse() {
+    public void testIsSuitableTrainerFalse() throws NegativeInputException {
         RegularEmployee re = new RegularEmployee();
         re.setName("rich");
         re.setDayWorking("Wed");
@@ -75,5 +77,30 @@ public class TestTrainingEmployee {
         assertEquals(3, te.getExperience());
         assertEquals(0,te.getTrainingPoints());
 
+    }
+
+    @Test
+    public void testConfirmDayAndShiftThrowEmptyFieldException() {
+        te.setName("Bobby");
+        te.setDayWorking("Tue");
+        te.setShift(null);
+        try {
+            te.confirmDayAndShift();
+            fail("No exception thrown");
+        } catch (EmptyFieldException e) {
+
+        }
+    }
+
+    @Test
+    public void testConfirmDayAndShiftNoException() {
+        te.setName("rich");
+        te.setDayWorking("Wed");
+        te.setShift("graveyard");
+        try {
+            te.confirmDayAndShift();
+        } catch (EmptyFieldException e) {
+            fail();
+        }
     }
 }

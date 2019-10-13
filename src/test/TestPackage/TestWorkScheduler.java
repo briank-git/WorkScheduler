@@ -1,5 +1,6 @@
 package TestPackage;
 
+import model.NegativeInputException;
 import model.RegularEmployee;
 import model.TrainingEmployee;
 import model.Employee;
@@ -18,7 +19,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddEmployeeSuccess() {
+    public void testAddEmployeeSuccess() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Tue");
@@ -29,7 +30,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddEmployeeFail() {
+    public void testAddEmployeeFail() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Tue");
@@ -40,7 +41,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddTrainingEmployeeSuccess() {
+    public void testAddTrainingEmployeeSuccess() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Tue");
@@ -56,7 +57,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddTrainingEmployeeExperienceFail() {
+    public void testAddTrainingEmployeeExperienceFail() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Tue");
@@ -72,7 +73,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddTrainingEmployeeDayWorkingFail() {
+    public void testAddTrainingEmployeeDayWorkingFail() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Wed");
@@ -88,7 +89,7 @@ public class TestWorkScheduler {
     }
 
     @Test
-    public void testAddTrainingEmployeeShiftFail() {
+    public void testAddTrainingEmployeeShiftFail() throws NegativeInputException {
         Employee re = new RegularEmployee();
         re.setName("Bobby");
         re.setDayWorking("Tue");

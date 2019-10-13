@@ -12,10 +12,10 @@ public class TrainingEmployee extends Employee {
         trainingPoints = 0;
     }
 
-    // REQUIRES: fields dayWorking, shift, and name are not empty
     // EFFECTS: prints out which day and which shift they are training
     @Override
-    public void confirmDayAndShift() {
+    public void confirmDayAndShift() throws EmptyFieldException {
+        super.confirmDayAndShift();
         System.out.println(name + " will be training on " + dayWorking + " " + shift + " shift.");
     }
 
