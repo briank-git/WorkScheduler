@@ -9,10 +9,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class WorkScheduler implements Saveable, Loadable {
     private ArrayList<Employee> employees;
@@ -97,13 +94,23 @@ public class WorkScheduler implements Saveable, Loadable {
         }
     }
 
+    // MODIFIES: this, Employee
+    // EFFECTS: removes employee from ArrayList employees, removes this from workScheduler field in employee
+    public void removeEmployee(Employee e) {
+        if (employees.contains(e)) {
+            e.removeWorkScheduler(this);
+            employees.remove(e);
+        }
+    }
 
-    // MODIFIES: this
+
+    // MODIFIES: this. Employee
     // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements returns true,
     //          else tells user that employee does not meet requirements returns false
     public boolean addEmployee(Employee e) throws NegativeInputException {
         if (job.isCompetent(e.getExperience())) {
             employees.add(e);
+            e.addWorkScheduler(this);
             try {
                 e.confirmDayAndShift();
             } catch (EmptyFieldException ex) {
@@ -111,6 +118,7 @@ public class WorkScheduler implements Saveable, Loadable {
             } finally {
                 System.out.println("Attempting to add employee.");
             }
+            e.totalShifts();
             return true;
         } else {
             System.out.println(e.getName() + " does not have at least " + job.getDifficulty() + " experience.");
@@ -118,7 +126,7 @@ public class WorkScheduler implements Saveable, Loadable {
         }
     }
 
-    // MODIFIES: this
+    // MODIFIES: this, TrainingEmployee
     // EFFECTS: checks if there is a regular employee with at least 5 experience scheduled at the same time as a
     //          training employee, if true then add the trainee to the schedule return true, else return false
     public boolean addTrainingEmployee(TrainingEmployee te) {
@@ -133,6 +141,8 @@ public class WorkScheduler implements Saveable, Loadable {
                 te.addTrainingPoints();
                 te.addExperiencePoints();
                 employees.add(te);
+                te.addWorkScheduler(this);
+                e.totalShifts();
                 return true;
             }
         }
@@ -183,12 +193,12 @@ public class WorkScheduler implements Saveable, Loadable {
     }
 
     //EFFECTS: splits input string into its parts and puts it into an arraylist which is returned
-    public static ArrayList<String> splitOnSpace(String line) {
+    private static ArrayList<String> splitOnSpace(String line) {
         String[] splits = line.split(" ");
         return new ArrayList<>(Arrays.asList(splits));
     }
 
-    public ArrayList<String> userInputFieldsTrainingEmployee(TrainingEmployee te) {
+    private ArrayList<String> userInputFieldsTrainingEmployee(TrainingEmployee te) {
         ArrayList<String> input = new ArrayList<String>();
 
         while (true) {
@@ -210,7 +220,7 @@ public class WorkScheduler implements Saveable, Loadable {
         return input;
     }
 
-    public ArrayList<String> userInputFieldsRegEmployee(RegularEmployee re) {
+    private ArrayList<String> userInputFieldsRegEmployee(RegularEmployee re) {
         ArrayList<String> input = new ArrayList<String>();
 
         while (true) {
@@ -234,6 +244,22 @@ public class WorkScheduler implements Saveable, Loadable {
         return input;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        WorkScheduler that = (WorkScheduler) o;
+        return employees.equals(that.employees) && job.equals(that.job);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employees, job);
+    }
 
     //MODIFIES: this
     // EFFECTS: creates a new instance of WorkScheduler and calls makeSchedule to start the application

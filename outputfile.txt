@@ -1,1 +1,3 @@
-toddd sun night 6
+dan sun night 5
+dan wed day 5
+dan fri night 5

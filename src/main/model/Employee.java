@@ -1,6 +1,9 @@
 package model;
 
+import ui.WorkScheduler;
+
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 public abstract class Employee {
@@ -8,6 +11,7 @@ public abstract class Employee {
     protected String dayWorking;
     protected String shift;
     protected int experience;
+    protected WorkScheduler workScheduler;
 
 
     protected static Scanner scanner = new Scanner(System.in);
@@ -17,6 +21,33 @@ public abstract class Employee {
         shift = "";
         name = "";
         experience = 0;
+    }
+
+    // EFFECTS: tells user how many shifts this employee is working
+    public void totalShifts() {
+        int totalShifts = 0;
+        for (Employee e : workScheduler.getEmployees()) {
+            if (this.equals(e)) {
+                totalShifts++;
+            }
+        }
+        System.out.println(name + " will be working " + totalShifts + " shift(s) next week");
+    }
+
+    // MODIFIES: this, WorkScheduler
+    // EFFECTS: sets workScheduler to a new workScheduler object if input is equals to field, removes this from input
+    // workScheduler's list of employees
+    public void removeWorkScheduler(WorkScheduler ws) {
+        if (ws.equals(workScheduler)) {
+            ws.removeEmployee(this);
+            workScheduler = new WorkScheduler();
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets field workScheduler to a reference to the workScheduler object that added this employee
+    public void addWorkScheduler(WorkScheduler ws) {
+        this.workScheduler = ws;
     }
 
     // MODIFIES: this
@@ -88,5 +119,22 @@ public abstract class Employee {
         if (dayWorking == null | shift == null | name == null) {
             throw new EmptyFieldException();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Employee employee = (Employee) o;
+        return experience == employee.experience && name.equals(employee.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, experience);
     }
 }
