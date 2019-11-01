@@ -1,20 +1,18 @@
 package model;
 
-import ui.WorkScheduler;
+import exceptions.ArraySizeException;
+import exceptions.EmptyFieldException;
+import exceptions.NegativeInputException;
 
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Scanner;
 
 public abstract class Employee {
     protected String name;
     protected String dayWorking;
     protected String shift;
     protected int experience;
-    protected WorkScheduler workScheduler;
-
-
-    protected static Scanner scanner = new Scanner(System.in);
+    protected EmployeeManager employeeManager;
 
     public Employee() {
         dayWorking = "";
@@ -24,30 +22,31 @@ public abstract class Employee {
     }
 
     // EFFECTS: tells user how many shifts this employee is working
-    public void totalShifts() {
+    public int totalShifts() {
         int totalShifts = 0;
-        for (Employee e : workScheduler.getEmployees()) {
+        for (Employee e : employeeManager.getEmployees()) {
             if (this.equals(e)) {
                 totalShifts++;
             }
         }
-        System.out.println(name + " will be working " + totalShifts + " shift(s) next week");
+        System.out.println(name + " is scheduled for " + totalShifts + " shift(s) next week");
+        return totalShifts;
     }
 
     // MODIFIES: this, WorkScheduler
     // EFFECTS: sets workScheduler to a new workScheduler object if input is equals to field, removes this from input
     // workScheduler's list of employees
-    public void removeWorkScheduler(WorkScheduler ws) {
-        if (ws.equals(workScheduler)) {
-            ws.removeEmployee(this);
-            workScheduler = new WorkScheduler();
+    public void removeEmployeeManager(EmployeeManager em) {
+        if (em.equals(employeeManager)) {
+            employeeManager = null;
+            em.removeEmployee(this);
         }
     }
 
     // MODIFIES: this
     // EFFECTS: sets field workScheduler to a reference to the workScheduler object that added this employee
-    public void addWorkScheduler(WorkScheduler ws) {
-        this.workScheduler = ws;
+    public void addEmployeeManager(EmployeeManager em) {
+        this.employeeManager = em;
     }
 
     // MODIFIES: this
@@ -114,6 +113,10 @@ public abstract class Employee {
         return this.experience;
     }
 
+    public EmployeeManager getEmployeeManager() {
+        return this.employeeManager;
+    }
+
     // EFFECTS: prints out which day and which shift they are working
     public void confirmDayAndShift() throws EmptyFieldException {
         if (dayWorking == null | shift == null | name == null) {
@@ -130,7 +133,7 @@ public abstract class Employee {
             return false;
         }
         Employee employee = (Employee) o;
-        return experience == employee.experience && name.equals(employee.name);
+        return experience == employee.experience & name.equals(employee.name);
     }
 
     @Override

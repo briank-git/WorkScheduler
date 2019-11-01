@@ -1,15 +1,12 @@
-package TestPackage;
+package tests;
 
-import model.EmptyFieldException;
-import model.NegativeInputException;
+import exceptions.EmptyFieldException;
+import exceptions.NegativeInputException;
 import model.RegularEmployee;
 import model.TrainingEmployee;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 

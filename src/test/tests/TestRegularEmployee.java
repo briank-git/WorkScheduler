@@ -1,5 +1,8 @@
-package TestPackage;
+package tests;
 
+import exceptions.ArraySizeException;
+import exceptions.EmptyFieldException;
+import exceptions.NegativeInputException;
 import model.*;
 
 
@@ -134,5 +137,19 @@ public class TestRegularEmployee {
         } catch (ArraySizeException e) {
             fail("Caught unexpected exception.");
         }
+    }
+
+    @Test
+    void testTotalShifts() throws ArraySizeException, NegativeInputException {
+        EmployeeManager em = new EmployeeManager();
+        RegularEmployee re1 = new RegularEmployee();
+        Job job = new Job("driver",5);
+        re1.scheduleEmployee(new ArrayList<String>(Arrays.asList("Ron","sun","night","5")));
+        RegularEmployee re2 = new RegularEmployee();
+        re2.scheduleEmployee(new ArrayList<String>(Arrays.asList("Ron","fri","graveyard","5")));
+        em.addEmployee(re1,job);
+        assertEquals(1,re1.totalShifts());
+        em.addEmployee(re2,job);
+        assertEquals(2,re2.totalShifts());
     }
 }

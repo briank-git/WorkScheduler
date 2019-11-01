@@ -1,7 +1,7 @@
-package TestPackage;
+package tests;
 
 import model.Employee;
-import model.NegativeInputException;
+import exceptions.NegativeInputException;
 import model.RegularEmployee;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package model;
 
 
-import java.util.ArrayList;
+import exceptions.EmptyFieldException;
 
 public class RegularEmployee extends Employee {
 

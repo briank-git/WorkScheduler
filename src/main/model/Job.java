@@ -1,5 +1,7 @@
 package model;
 
+import exceptions.NegativeInputException;
+
 public class Job {
     private String jobName;
     private int difficulty;

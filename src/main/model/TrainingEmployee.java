@@ -1,6 +1,6 @@
 package model;
 
-import java.util.ArrayList;
+import exceptions.EmptyFieldException;
 
 public class TrainingEmployee extends Employee {
     private int trainingPoints;

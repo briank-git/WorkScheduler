@@ -1,5 +1,7 @@
 package ui;
 
+import exceptions.ArraySizeException;
+import exceptions.NegativeInputException;
 import model.*;
 
 import java.io.FileNotFoundException;
@@ -12,17 +14,16 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class WorkScheduler implements Saveable, Loadable {
-    private ArrayList<Employee> employees;
     private Scanner scanner;
     private Job job;
     PrintWriter writer;
+    private EmployeeManager employeeManager = new EmployeeManager();
     private ArrayList<String> days = new ArrayList<>(Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat"));
     private ArrayList<String> shifts = new ArrayList<>(Arrays.asList("day", "night", "graveyard"));
 
     //MODIFIES:this
     // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
     public WorkScheduler() {
-        employees = new ArrayList<Employee>();
         scanner = new Scanner(System.in);
         try {
             job = new Job("driver", 3);
@@ -32,7 +33,7 @@ public class WorkScheduler implements Saveable, Loadable {
     }
 
     public ArrayList<Employee> getEmployees() {
-        return employees;
+        return employeeManager.getEmployees();
     }
 
     // MODIFIES: this, Employee
@@ -41,8 +42,8 @@ public class WorkScheduler implements Saveable, Loadable {
         operationHelper();
 
         System.out.println("This is the schedule for " + job.getJobName() + "s next week:");
-        printEmployees(employees);
-        save(employees);
+        employeeManager.printEmployees();
+        save(employeeManager.getEmployees());
     }
 
     //EFFECTS: asks for user input, creates an employee using it, then adds it to list of employees
@@ -56,7 +57,7 @@ public class WorkScheduler implements Saveable, Loadable {
                 System.out.println("Quitting and printing a work schedule.");
                 break;
             } else if (operation.equals("load")) {
-                employees = load();
+                employeeManager.setEmployees(load());
                 System.out.println("Loading employees from previous session.");
             } else if (operation.equals("at")) {
                 operationAtHelper();
@@ -72,7 +73,7 @@ public class WorkScheduler implements Saveable, Loadable {
         TrainingEmployee te = new TrainingEmployee();
         System.out.println("Scheduling trainee for " + job.getJobName());
         try {
-            te.scheduleEmployee(userInputFieldsTrainingEmployee(te));
+            te.scheduleEmployee(userInputFieldsEmployee());
         } catch (ArraySizeException e) {
             System.out.println("Size of array too long.");
         }
@@ -83,23 +84,14 @@ public class WorkScheduler implements Saveable, Loadable {
         RegularEmployee re = new RegularEmployee();
         System.out.println("Scheduling employee for " + job.getJobName());
         try {
-            re.scheduleEmployee(userInputFieldsRegEmployee(re));
+            re.scheduleEmployee(userInputFieldsEmployee());
         } catch (ArraySizeException e) {
             System.out.println("Size of array too long.");
         }
         try {
-            addEmployee(re);
+            addEmployee(re, job);
         } catch (NegativeInputException ne) {
             System.out.println("Experience is negative");
-        }
-    }
-
-    // MODIFIES: this, Employee
-    // EFFECTS: removes employee from ArrayList employees, removes this from workScheduler field in employee
-    public void removeEmployee(Employee e) {
-        if (employees.contains(e)) {
-            e.removeWorkScheduler(this);
-            employees.remove(e);
         }
     }
 
@@ -107,59 +99,15 @@ public class WorkScheduler implements Saveable, Loadable {
     // MODIFIES: this. Employee
     // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements returns true,
     //          else tells user that employee does not meet requirements returns false
-    public boolean addEmployee(Employee e) throws NegativeInputException {
-        if (job.isCompetent(e.getExperience())) {
-            employees.add(e);
-            e.addWorkScheduler(this);
-            try {
-                e.confirmDayAndShift();
-            } catch (EmptyFieldException ex) {
-                System.out.println("One of the fields are empty.");
-            } finally {
-                System.out.println("Attempting to add employee.");
-            }
-            e.totalShifts();
-            return true;
-        } else {
-            System.out.println(e.getName() + " does not have at least " + job.getDifficulty() + " experience.");
-            return false;
-        }
+    public boolean addEmployee(Employee e, Job job) throws NegativeInputException {
+        return employeeManager.addEmployee(e,job);
     }
 
     // MODIFIES: this, TrainingEmployee
     // EFFECTS: checks if there is a regular employee with at least 5 experience scheduled at the same time as a
     //          training employee, if true then add the trainee to the schedule return true, else return false
     public boolean addTrainingEmployee(TrainingEmployee te) {
-        for (Employee e : employees) {
-            if (e.getDayWorking().equals(te.getDayWorking())
-                    & e.getShift().equals(te.getShift()) & te.isSuitableTrainer(e)) {
-                try {
-                    te.confirmDayAndShift();
-                } catch (EmptyFieldException ef) {
-                    System.out.println("One of the fields are empty.");
-                }
-                te.addTrainingPoints();
-                te.addExperiencePoints();
-                employees.add(te);
-                te.addWorkScheduler(this);
-                e.totalShifts();
-                return true;
-            }
-        }
-        System.out.println("There is no employee with min. 5 experience to train " + te.getName() + " at that time.");
-        return false;
-    }
-
-
-    //EFFECTS: has each employee announce their name, day working, and shift
-    public void printEmployees(ArrayList<Employee> employees) {
-        for (Employee e : employees) {
-            try {
-                e.confirmDayAndShift();
-            } catch (EmptyFieldException ef) {
-                System.out.println("One of the fields are empty.");
-            }
-        }
+        return employeeManager.addTrainingEmployee(te);
     }
 
     //EFFECTS: saves employee data from a list to outputfile.txt 
@@ -198,38 +146,38 @@ public class WorkScheduler implements Saveable, Loadable {
         return new ArrayList<>(Arrays.asList(splits));
     }
 
-    private ArrayList<String> userInputFieldsTrainingEmployee(TrainingEmployee te) {
-        ArrayList<String> input = new ArrayList<String>();
+//    private ArrayList<String> userInputFieldsTrainingEmployee(TrainingEmployee te) {
+//        ArrayList<String> input = new ArrayList<String>();
+//
+//        while (true) {
+//
+//            System.out.println("Enter the training employee's name:");
+//            input.add(0, scanner.nextLine());
+//            System.out.println("Enter the 3 letter day of the week they will be training (sun to sat):");
+//            input.add(1, scanner.nextLine());
+//            System.out.println("Enter the shift they will be training on that day (day, night, graveyard):");
+//            input.add(2, scanner.nextLine());
+//            input.add(3, "0");
+//            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty()) {
+//                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
+//                    break;
+//                }
+//            }
+//            System.out.println("Day working or shift were empty or did not have expected values. Please try again.");
+//        }
+//        return input;
+//    }
 
-        while (true) {
-
-            System.out.println("Enter the training employee's name:");
-            input.add(0, scanner.nextLine());
-            System.out.println("Enter the 3 letter day of the week they will be training (sun to sat):");
-            input.add(1, scanner.nextLine());
-            System.out.println("Enter the shift they will be training on that day (day, night, graveyard):");
-            input.add(2, scanner.nextLine());
-            input.add(3, "0");
-            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty()) {
-                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
-                    break;
-                }
-            }
-            System.out.println("Day working or shift were empty or did not have expected values. Please try again.");
-        }
-        return input;
-    }
-
-    private ArrayList<String> userInputFieldsRegEmployee(RegularEmployee re) {
+    private ArrayList<String> userInputFieldsEmployee() {
         ArrayList<String> input = new ArrayList<String>();
 
         while (true) {
 
             System.out.println("Enter the employee's name:");
             input.add(0, scanner.nextLine());
-            System.out.println("Enter the 3 letter day of the week they will be working (sun to sat):");
+            System.out.println("Enter the 3 letter day of the week to be scheduled (sun to sat):");
             input.add(1, scanner.nextLine());
-            System.out.println("Enter the shift they will be working on that day (day, night, graveyard):");
+            System.out.println("Enter the shift to be scheduled (day, night, graveyard):");
             input.add(2, scanner.nextLine());
             System.out.println("Enter the experience level of the employee:");
             input.add(3, scanner.nextLine());
@@ -244,22 +192,6 @@ public class WorkScheduler implements Saveable, Loadable {
         return input;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        WorkScheduler that = (WorkScheduler) o;
-        return employees.equals(that.employees) && job.equals(that.job);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(employees, job);
-    }
 
     //MODIFIES: this
     // EFFECTS: creates a new instance of WorkScheduler and calls makeSchedule to start the application

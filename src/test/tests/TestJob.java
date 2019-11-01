@@ -1,10 +1,10 @@
-package TestPackage;
+package tests;
 
 import model.Job;
 
 
-import model.NegativeInputException;
-import model.WorkSchedulerException;
+import exceptions.NegativeInputException;
+import exceptions.WorkSchedulerException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
