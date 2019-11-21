@@ -3,7 +3,7 @@ package ui;
 import exceptions.ArraySizeException;
 import exceptions.NegativeInputException;
 import model.*;
-
+import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -190,13 +190,5 @@ public class WorkScheduler implements Saveable, Loadable {
         }
 
         return input;
-    }
-
-
-    //MODIFIES: this
-    // EFFECTS: creates a new instance of WorkScheduler and calls makeSchedule to start the application
-    public static void main(String[] args) throws IOException {
-        WorkScheduler ws = new WorkScheduler();
-        ws.makeSchedule();
     }
 }
