@@ -16,7 +16,7 @@ import java.util.*;
 public class WorkScheduler implements Saveable, Loadable {
     private Scanner scanner;
     private Job job;
-    PrintWriter writer;
+    private PrintWriter writer;
     private EmployeeManager employeeManager = new EmployeeManager();
     private ArrayList<String> days = new ArrayList<>(Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat"));
     private ArrayList<String> shifts = new ArrayList<>(Arrays.asList("day", "night", "graveyard"));

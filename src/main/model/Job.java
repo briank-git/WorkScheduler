@@ -54,4 +54,8 @@ public class Job {
         return competent;
     }
 
+    @Override
+    public String toString() {
+        return jobName;
+    }
 }
