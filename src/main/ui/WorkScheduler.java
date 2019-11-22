@@ -25,74 +25,75 @@ public class WorkScheduler implements Saveable, Loadable {
     // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
     public WorkScheduler() {
         scanner = new Scanner(System.in);
-        try {
-            job = new Job("driver", 3);
-        } catch (NegativeInputException ne) {
-            System.out.println("Difficulty is negative.");
-        }
+    }
+
+    public void setJob(Job job) {
+        this.job = job;
     }
 
     public ArrayList<Employee> getEmployees() {
         return employeeManager.getEmployees();
     }
 
+    public void setEmployees(ArrayList<Employee> employees) {
+        employeeManager.setEmployees(employees);
+    }
+
     // MODIFIES: this, Employee
     // EFFECTS: makes a weekly (Sun to Sat) schedule by giving employees certain days and shifts with user input
-    public void makeSchedule() throws IOException {
-        operationHelper();
+//    public void makeSchedule() throws IOException {
+//        operationHelper();
+//
+//        System.out.println("This is the schedule for " + job.getJobName() + "s next week:");
+//        employeeManager.printEmployees();
+//        save(employeeManager.getEmployees());
+//    }
 
-        System.out.println("This is the schedule for " + job.getJobName() + "s next week:");
-        employeeManager.printEmployees();
-        save(employeeManager.getEmployees());
-    }
+//    //EFFECTS: asks for user input, creates an employee using it, then adds it to list of employees
+//    private void operationHelper() throws IOException {
+//        String operation;
+//        while (true) {
+//            System.out.println("Please input an option (add reg. employee (are), add trainee (at), load, or quit):");
+//            operation = scanner.nextLine();
+//
+//            if (operation.equals("quit")) {
+//                System.out.println("Quitting and printing a work schedule.");
+//                break;
+//            } else if (operation.equals("load")) {
+//                employeeManager.setEmployees(load());
+//                System.out.println("Loading employees from previous session.");
+//            } else if (operation.equals("at")) {
+//                operationAtHelper();
+//            } else if (operation.equals("are")) {
+//                operationAreHelper();
+//            } else {
+//                System.out.println(operation + " is not a valid choice.");
+//            }
+//        }
+//    }
 
-    //EFFECTS: asks for user input, creates an employee using it, then adds it to list of employees
-    private void operationHelper() throws IOException {
-        String operation;
-        while (true) {
-            System.out.println("Please input an option (add reg. employee (are), add trainee (at), load, or quit):");
-            operation = scanner.nextLine();
-
-            if (operation.equals("quit")) {
-                System.out.println("Quitting and printing a work schedule.");
-                break;
-            } else if (operation.equals("load")) {
-                employeeManager.setEmployees(load());
-                System.out.println("Loading employees from previous session.");
-            } else if (operation.equals("at")) {
-                operationAtHelper();
-            } else if (operation.equals("are")) {
-                operationAreHelper();
-            } else {
-                System.out.println(operation + " is not a valid choice.");
-            }
-        }
-    }
-
-    private void operationAtHelper() {
+    public boolean scheduleTrainee(ArrayList<String> inputFields) {
         TrainingEmployee te = new TrainingEmployee();
-        System.out.println("Scheduling trainee for " + job.getJobName());
         try {
-            te.scheduleEmployee(userInputFieldsEmployee());
+            te.scheduleEmployee(inputFields);
         } catch (ArraySizeException e) {
             System.out.println("Size of array too long.");
         }
-        addTrainingEmployee(te);
+        return addTrainingEmployee(te);
     }
 
-    private void operationAreHelper() {
+    public boolean scheduleRegular(ArrayList<String> inputFields) throws NegativeInputException {
+        boolean isSuccess = false;
         RegularEmployee re = new RegularEmployee();
-        System.out.println("Scheduling employee for " + job.getJobName());
         try {
-            re.scheduleEmployee(userInputFieldsEmployee());
+            re.scheduleEmployee(inputFields);
         } catch (ArraySizeException e) {
             System.out.println("Size of array too long.");
         }
-        try {
-            addEmployee(re, job);
-        } catch (NegativeInputException ne) {
-            System.out.println("Experience is negative");
-        }
+
+        isSuccess = addEmployee(re, job);
+
+        return isSuccess;
     }
 
 
@@ -104,16 +105,16 @@ public class WorkScheduler implements Saveable, Loadable {
     }
 
     // MODIFIES: this, TrainingEmployee
-    // EFFECTS: checks if there is a regular employee with at least 5 experience scheduled at the same time as a
+    // EFFECTS: checks if there is a regular employee with at least 6 experience scheduled at the same time as a
     //          training employee, if true then add the trainee to the schedule return true, else return false
     public boolean addTrainingEmployee(TrainingEmployee te) {
         return employeeManager.addTrainingEmployee(te);
     }
 
     //EFFECTS: saves employee data from a list to outputfile.txt 
-    public void save(ArrayList<Employee> employees) throws FileNotFoundException, UnsupportedEncodingException {
+    public void save() throws FileNotFoundException, UnsupportedEncodingException {
         writer = new PrintWriter("outputfile.txt", "UTF-8");
-        for (Employee e : employees) {
+        for (Employee e : getEmployees()) {
             writer.println(e.getName() + " " + e.getDayWorking() + " " + e.getShift() + " " + e.getExperience());
         }
         writer.close();
@@ -168,27 +169,27 @@ public class WorkScheduler implements Saveable, Loadable {
 //        return input;
 //    }
 
-    private ArrayList<String> userInputFieldsEmployee() {
-        ArrayList<String> input = new ArrayList<String>();
-
-        while (true) {
-
-            System.out.println("Enter the employee's name:");
-            input.add(0, scanner.nextLine());
-            System.out.println("Enter the 3 letter day of the week to be scheduled (sun to sat):");
-            input.add(1, scanner.nextLine());
-            System.out.println("Enter the shift to be scheduled (day, night, graveyard):");
-            input.add(2, scanner.nextLine());
-            System.out.println("Enter the experience level of the employee:");
-            input.add(3, scanner.nextLine());
-            if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty() & !input.get(3).isEmpty()) {
-                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
-                    break;
-                }
-            }
-            System.out.println("One of the inputs were empty or did not have expected values. Please try again.");
-        }
-
-        return input;
-    }
+//    private ArrayList<String> userInputFieldsEmployee() {
+//        ArrayList<String> input = new ArrayList<String>();
+//
+//        while (true) {
+//
+//            System.out.println("Enter the employee's name:");
+//            input.add(0, scanner.nextLine());
+//            System.out.println("Enter the 3 letter day of the week to be scheduled (sun to sat):");
+//            input.add(1, scanner.nextLine());
+//            System.out.println("Enter the shift to be scheduled (day, night, graveyard):");
+//            input.add(2, scanner.nextLine());
+//            System.out.println("Enter the experience level of the employee:");
+//            input.add(3, scanner.nextLine());
+//         if (!input.get(0).isEmpty() & !input.get(1).isEmpty() & !input.get(2).isEmpty() & !input.get(3).isEmpty()) {
+//                if (days.contains(input.get(1)) & shifts.contains(input.get(2))) {
+//                    break;
+//                }
+//            }
+//            System.out.println("One of the inputs were empty or did not have expected values. Please try again.");
+//        }
+//
+//        return input;
+//    }
 }

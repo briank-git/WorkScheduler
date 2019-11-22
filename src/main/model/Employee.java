@@ -118,10 +118,11 @@ public abstract class Employee {
     }
 
     // EFFECTS: prints out which day and which shift they are working
-    public void confirmDayAndShift() throws EmptyFieldException {
+    public String confirmDayAndShift() throws EmptyFieldException {
         if (dayWorking == null | shift == null | name == null) {
             throw new EmptyFieldException();
         }
+        return "";
     }
 
     @Override

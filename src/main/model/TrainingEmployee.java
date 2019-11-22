@@ -14,15 +14,16 @@ public class TrainingEmployee extends Employee {
 
     // EFFECTS: prints out which day and which shift they are training
     @Override
-    public void confirmDayAndShift() throws EmptyFieldException {
+    public String confirmDayAndShift() throws EmptyFieldException {
         super.confirmDayAndShift();
         System.out.println(name + " will be training on " + dayWorking + " " + shift + " shift.");
+        return name + " will be training on " + dayWorking + " " + shift + " shift.";
     }
 
 
-    //EFFECTS: checks if a regular employee has enough experience (at least 5) to train the training employee
+    //EFFECTS: checks if a regular employee has enough experience (at least 6) to train the training employee
     public boolean isSuitableTrainer(Employee e) {
-        int minExp = 5;
+        int minExp = 6;
         if (e.getExperience() >= minExp) {
             return true;
         }
