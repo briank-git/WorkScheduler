@@ -1,15 +1,17 @@
 package model;
 
 import exceptions.EmptyFieldException;
+import exceptions.NegativeInputException;
 
 public class TrainingEmployee extends Employee {
     private int trainingPoints;
     private final int pointsPerShift = 50;
     private final int pointsPerExperience = 100;
 
-    public TrainingEmployee() {
+    public TrainingEmployee() throws NegativeInputException {
         super();
         trainingPoints = 0;
+        job = new Job("Trainee", 0);
     }
 
     // EFFECTS: prints out which day and which shift they are training

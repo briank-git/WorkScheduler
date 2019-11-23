@@ -29,11 +29,13 @@ public class WorkSchedulerUI extends JFrame {
     private JButton printScheduleButton = new JButton("Print next week's schedule");
 
     private String[] days = {"sun", "mon", "tue", "wed", "thu", "fri", "sat"};
+    private ArrayList<String> daysArray = new ArrayList<String>(Arrays.asList(days));
     private String[] shifts = {"day", "night", "graveyard"};
-    private Job headChef = new Job("Head Nurse", 10);
-    private Job chef = new Job("Senior Nurse", 6);
+    private ArrayList<String> shiftsArray = new ArrayList<String>(Arrays.asList(shifts));
+    private Job headChef = new Job("Head_Nurse", 10);
+    private Job chef = new Job("Senior_Nurse", 6);
     private Job lineCook = new Job("Nurse", 3);
-    private Job newCook = new Job("New Nurse", 1);
+    private Job newCook = new Job("New_Nurse", 1);
     private Job[] jobs = {headChef,chef,lineCook,newCook};
 
     private JComboBox cbDays = new JComboBox(days);
@@ -151,13 +153,14 @@ public class WorkSchedulerUI extends JFrame {
                 } else {
                     outputText.append(fieldInputs.get(0) + " was successfully added.\n");
                 }
-            } catch (NumberFormatException exception) {
+            } catch (NumberFormatException | NegativeInputException exception) {
                 outputText.append("Experience must be a positive integer.\n");
             }
         }
     }
 
     private class PrintButtonListener implements ActionListener {
+        ArrayList<Employee> employees;
         JLabel sun = new JLabel("Sunday");
         JLabel mon = new JLabel("Monday");
         JLabel tue = new JLabel("Tuesday");
@@ -167,26 +170,62 @@ public class WorkSchedulerUI extends JFrame {
         JLabel sat = new JLabel("Saturday");
         JLabel mt = new JLabel("");
         ArrayList<JLabel> labels = new ArrayList<JLabel>(Arrays.asList(sun,mon,tue,wed,thu,fri,sat,mt));
-        JPanel schedule = new JPanel(new GridLayout(5,1,3,3));
-        JPanel days = new JPanel(new GridLayout(1,8,3,3));
-        JPanel dayShift = new JPanel(new GridLayout(1,8,3,3));
-        ArrayList<JTextArea> dayShiftTextAreas = new ArrayList<>();
-        JPanel nightShift = new JPanel(new GridLayout(1,8,3,3));
-        ArrayList<JTextArea> nightShiftTextAreas = new ArrayList<>();
-        JPanel graveyardShift = new JPanel(new GridLayout(1,8,3,3));
-        ArrayList<JTextArea> graveyardShiftTextAreas = new ArrayList<>();
+        JPanel schedule;
+        JPanel daysPanel;
+        JPanel dayShift;
+        ArrayList<JTextArea> dayShiftTextAreas;
+        JPanel nightShift;
+        ArrayList<JTextArea> nightShiftTextAreas;
+        JPanel graveyardShift;
+        ArrayList<JTextArea> graveyardShiftTextAreas;
         JLabel day = new JLabel("Day");
         JLabel night = new JLabel("Night");
         JLabel graveyard = new JLabel("Graveyard");
 
-        PrintButtonListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            this.employees = workScheduler.getEmployees();
+            initializePanels();
+            for (Employee employee : this.employees) {
+                int dayIndex = daysArray.indexOf(employee.getDayWorking());
+                String shift = employee.getShift();
+                if (shift.equals("day")) {
+                    dayShiftTextAreas.get(dayIndex).append(employee.getJob() + ": " + employee.getName() + "\n");
+                } else if (shift.equals("night")) {
+                    nightShiftTextAreas.get(dayIndex).append(employee.getJob() + ": " + employee.getName() + "\n");
+                } else if (shift.equals("graveyard")) {
+                    graveyardShiftTextAreas.get(dayIndex).append(employee.getJob() + ": " + employee.getName() + "\n");
+                }
+            }
+            setPanel();
+        }
+
+        private void initializePanels() {
+            schedule = new JPanel(new GridLayout(5,1,3,3));
+            daysPanel  = new JPanel(new GridLayout(1,8,3,3));
+            dayShift  = new JPanel(new GridLayout(1,8,3,3));
+            nightShift = new JPanel(new GridLayout(1,8,3,3));;
+            graveyardShift  = new JPanel(new GridLayout(1,8,3,3));
+            dayShiftTextAreas  = new ArrayList<>();
+            nightShiftTextAreas = new ArrayList<>();
+            graveyardShiftTextAreas = new ArrayList<>();
+            initializeTextAreas();
+        }
+
+        private void addLabels() {
+            for (JLabel label : labels) {
+                daysPanel.add(label);
+            }
+            dayShift.add(day);
+            nightShift.add(night);
+            graveyardShift.add(graveyard);
+        }
+
+        private void initializeTextAreas() {
             for (int i = 0; i <= 6; i++) {
                 dayShiftTextAreas.add(new JTextArea(10,10));
                 nightShiftTextAreas.add(new JTextArea(10,10));
                 graveyardShiftTextAreas.add(new JTextArea(10,10));
-            }
-            for (JLabel label : labels) {
-                days.add(label);
             }
             for (int i = 0; i <= 6; i++) {
                 dayShiftTextAreas.get(i).setEditable(false);
@@ -196,24 +235,20 @@ public class WorkSchedulerUI extends JFrame {
                 nightShift.add(nightShiftTextAreas.get(i));
                 graveyardShift.add(graveyardShiftTextAreas.get(i));
             }
-            dayShift.add(day);
-            nightShift.add(night);
-            graveyardShift.add(graveyard);
+            addLabels();
         }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            JFrame popUp = new JFrame("Print");
-
-            schedule.add(days);
+        private void setPanel() {
+            JFrame popUpPrintPanel = new JFrame("Print");
+            schedule.add(daysPanel);
             schedule.add(dayShift);
             schedule.add(nightShift);
             schedule.add(graveyardShift);
-            popUp.add(schedule);
+            popUpPrintPanel.add(schedule);
 
-            popUp.setSize(1200,800);
-            popUp.setResizable(false);
-            popUp.setVisible(true);
+            popUpPrintPanel.setSize(1200,800);
+            popUpPrintPanel.setResizable(false);
+            popUpPrintPanel.setVisible(true);
         }
     }
 
@@ -223,6 +258,7 @@ public class WorkSchedulerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 workScheduler.save();
+                outputText.append("Saving employees.\n");
             } catch (FileNotFoundException | UnsupportedEncodingException ex) {
                 ex.printStackTrace();
             }
@@ -235,7 +271,8 @@ public class WorkSchedulerUI extends JFrame {
         public void actionPerformed(ActionEvent e) {
             try {
                 workScheduler.load();
-            } catch (IOException ex) {
+                outputText.append("Loading employees.\n");
+            } catch (IOException | NegativeInputException ex) {
                 ex.printStackTrace();
             }
         }
@@ -246,6 +283,7 @@ public class WorkSchedulerUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             workScheduler.setEmployees(new ArrayList<Employee>());
+            outputText.append("Clearing schedule.\n");
         }
     }
 

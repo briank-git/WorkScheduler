@@ -1,0 +1,6 @@
+Dame sun day 10 Head_Nurse 10
+Dame tue day 10 Head_Nurse 10
+Dame thu day 10 Head_Nurse 10
+Dame thu night 10 Head_Nurse 10
+Dame tue night 10 Head_Nurse 10
+Dame sun night 10 Head_Nurse 10

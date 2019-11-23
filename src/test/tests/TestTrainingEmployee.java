@@ -14,7 +14,7 @@ public class TestTrainingEmployee {
     TrainingEmployee te;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws NegativeInputException {
         te = new TrainingEmployee();
     }
 

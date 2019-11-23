@@ -40,6 +40,7 @@ public class EmployeeManager {
         if (job.isCompetent(e.getExperience())) {
             employees.add(e);
             e.addEmployeeManager(this);
+            e.setJob(job);
             try {
                 e.confirmDayAndShift();
             } catch (EmptyFieldException ex) {

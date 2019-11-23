@@ -13,6 +13,7 @@ public abstract class Employee {
     protected String shift;
     protected int experience;
     protected EmployeeManager employeeManager;
+    protected Job job;
 
     public Employee() {
         dayWorking = "";
@@ -20,6 +21,15 @@ public abstract class Employee {
         name = "";
         experience = 0;
     }
+
+    public void setJob(Job job) {
+        this.job = job;
+    }
+
+    public Job getJob() {
+        return this.job;
+    }
+
 
     // EFFECTS: tells user how many shifts this employee is working
     public int totalShifts() {
