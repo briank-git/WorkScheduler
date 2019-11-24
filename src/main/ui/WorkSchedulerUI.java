@@ -48,6 +48,7 @@ public class WorkSchedulerUI extends JFrame {
     private JTextField nameInput = new JTextField("Name", 10);
     private JTextField expInput = new JTextField("Exp", 3);
     private JTextArea outputText = new JTextArea(20,30);
+    private JScrollPane outputTextScrollPane = new JScrollPane(outputText);
     private JLabel jobSelection = new JLabel("Select job to fill");
 
     private RegularButtonListener regularButtonListener = new RegularButtonListener();
@@ -86,11 +87,15 @@ public class WorkSchedulerUI extends JFrame {
         cbJobs.addItemListener(jobChangeListener);
     }
 
-    private void setMainPanel() {
+    private void setMenuBar() {
         file.add(save);
         file.add(load);
         file.add(clearAll);
         menuBar.add(file);
+    }
+
+    private void setMainPanel() {
+        setMenuBar();
         menuPanel.add(menuBar);
 
         mainPanel.add(menuPanel);
@@ -104,8 +109,7 @@ public class WorkSchedulerUI extends JFrame {
         jobPanel.add(jobSelection);
         jobPanel.add(cbJobs);
         mainPanel.add(jobPanel);
-
-        mainPanel.add(outputText);
+        mainPanel.add(outputTextScrollPane);
         mainPanel.add(printScheduleButton);
 
 
@@ -204,7 +208,7 @@ public class WorkSchedulerUI extends JFrame {
             schedule = new JPanel(new GridLayout(5,1,3,3));
             daysPanel  = new JPanel(new GridLayout(1,8,3,3));
             dayShift  = new JPanel(new GridLayout(1,8,3,3));
-            nightShift = new JPanel(new GridLayout(1,8,3,3));;
+            nightShift = new JPanel(new GridLayout(1,8,3,3));
             graveyardShift  = new JPanel(new GridLayout(1,8,3,3));
             dayShiftTextAreas  = new ArrayList<>();
             nightShiftTextAreas = new ArrayList<>();

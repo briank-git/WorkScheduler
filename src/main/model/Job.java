@@ -16,13 +16,10 @@ public class Job {
         this.difficulty = difficulty;
     }
 
-    //MODIFIES: this
-    //EFFECTS: sets field jobName
     public void setJobName(String name) {
         this.jobName = name;
     }
 
-    //EFFECTS: returns field jobName
     public String getJobName() {
         return this.jobName;
     }

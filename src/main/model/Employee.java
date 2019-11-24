@@ -59,22 +59,36 @@ public abstract class Employee {
         this.employeeManager = em;
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets the name of this
     public void setName(String name) {
         this.name = name;
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets the dayWorking of this
     public void setDayWorking(String dayWorking) {
         this.dayWorking = dayWorking;
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets the shift of this
     public void setShift(String shift) {
         this.shift = shift;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getDayWorking() {
+        return this.dayWorking;
+    }
+
+    public String getShift() {
+        return this.shift;
+    }
+
+    public int getExperience() {
+        return this.experience;
+    }
+
+    public EmployeeManager getEmployeeManager() {
+        return this.employeeManager;
     }
 
     // MODIFIES: this
@@ -101,30 +115,6 @@ public abstract class Employee {
         experience = Integer.parseInt(fields.get(3));
 
         return this;
-    }
-
-    // EFFECTS: returns field name
-    public String getName() {
-        return this.name;
-    }
-
-    // EFFECTS: returns field dayWorking
-    public String getDayWorking() {
-        return this.dayWorking;
-    }
-
-    // EFFECTS: returns field shift
-    public String getShift() {
-        return this.shift;
-    }
-
-    // EFFECTS: returns field experience
-    public int getExperience() {
-        return this.experience;
-    }
-
-    public EmployeeManager getEmployeeManager() {
-        return this.employeeManager;
     }
 
     // EFFECTS: prints out which day and which shift they are working

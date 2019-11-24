@@ -33,7 +33,7 @@ public class EmployeeManager {
     }
 
 
-    // MODIFIES: this. Employee
+    // MODIFIES: this, Employee
     // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements returns true,
     //          else tells user that employee does not meet requirements returns false
     public boolean addEmployee(Employee e, Job job) throws NegativeInputException {
@@ -57,7 +57,7 @@ public class EmployeeManager {
     }
 
     // MODIFIES: this, TrainingEmployee
-    // EFFECTS: checks if there is a regular employee with at least 5 experience scheduled at the same time as a
+    // EFFECTS: checks if there is a regular employee with at least 6 experience scheduled at the same time as a
     //          training employee, if true then add the trainee to the schedule return true, else return false
     public boolean addTrainingEmployee(TrainingEmployee te) {
         for (Employee e : employees) {
@@ -81,7 +81,7 @@ public class EmployeeManager {
     }
 
 
-    //EFFECTS: has each employee announce their name, day working, and shift
+    //EFFECTS: has each employee announce their name, day working, and shift to console
     public void printEmployees() {
         for (Employee e : employees) {
             try {

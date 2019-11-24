@@ -2,7 +2,7 @@ package ui;
 
 import exceptions.NegativeInputException;
 import model.Employee;
-import model.RegularEmployee;
+
 import java.io.IOException;
 import java.util.ArrayList;
 

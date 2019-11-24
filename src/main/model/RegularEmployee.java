@@ -5,7 +5,7 @@ import exceptions.EmptyFieldException;
 
 public class RegularEmployee extends Employee {
 
-    // EFFECTS: prints out which day and which shift they are working
+    // EFFECTS: prints out which day and which shift they are working, returns same string.
     @Override
     public String confirmDayAndShift() throws EmptyFieldException {
         super.confirmDayAndShift();

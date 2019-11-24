@@ -3,7 +3,7 @@ package ui;
 import exceptions.ArraySizeException;
 import exceptions.NegativeInputException;
 import model.*;
-import javax.swing.*;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,18 +14,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class WorkScheduler implements Saveable, Loadable {
-    private Scanner scanner;
     private Job job;
-    private PrintWriter writer;
     private EmployeeManager employeeManager = new EmployeeManager();
-    private ArrayList<String> days = new ArrayList<>(Arrays.asList("sun", "mon", "tue", "wed", "thu", "fri", "sat"));
-    private ArrayList<String> shifts = new ArrayList<>(Arrays.asList("day", "night", "graveyard"));
-
-    //MODIFIES:this
-    // EFFECTS: initializes fields employees and scanner, calls the makeSchedule method to being creating a schedule
-    public WorkScheduler() {
-        scanner = new Scanner(System.in);
-    }
 
     public void setJob(Job job) {
         this.job = job;
@@ -39,6 +29,10 @@ public class WorkScheduler implements Saveable, Loadable {
         employeeManager.setEmployees(employees);
     }
 
+    //MODIFIES: TrainingEmployee, EmployeeManager
+    //EFFECTS: Takes a list of employee fields and calls scheduleEmployee  on a TrainingEmployee with it.
+    //Adds employee to EmployeeManager and returns true if there is an employee in the same shift with at least 6
+    //experience to train the trainee.
     public boolean scheduleTrainee(ArrayList<String> inputFields) throws NegativeInputException {
         TrainingEmployee te = new TrainingEmployee();
         try {
@@ -49,6 +43,10 @@ public class WorkScheduler implements Saveable, Loadable {
         return addTrainingEmployee(te);
     }
 
+    //MODIFIES: RegularEmployee, EmployeeManager
+    //EFFECTS: Takes a list of employee fields ans calls scheduleEmployee on a RegularEmployee with it.
+    //Adds employee to EmployeeManager and returns true if the employee has enough experience for the job
+    //set to this WorkScheduler.
     public boolean scheduleRegular(ArrayList<String> inputFields) throws NegativeInputException {
         boolean isSuccess = false;
         RegularEmployee re = new RegularEmployee();
@@ -64,23 +62,24 @@ public class WorkScheduler implements Saveable, Loadable {
     }
 
 
-    // MODIFIES: this. Employee
-    // EFFECTS: adds an employee to ArrayList employees if they meet the job's experience requirements returns true,
-    //          else tells user that employee does not meet requirements returns false
+    // MODIFIES: EmployeeManager, Job
+    // EFFECTS: Adds an employee to ArrayList employees in EmployeeManager if experience requirements met,
+    //sets job field of employee to job set for this WorkScheduler
     public boolean addEmployee(Employee e, Job job) throws NegativeInputException {
         return employeeManager.addEmployee(e,job);
     }
 
-    // MODIFIES: this, TrainingEmployee
-    // EFFECTS: checks if there is a regular employee with at least 6 experience scheduled at the same time as a
-    //          training employee, if true then add the trainee to the schedule return true, else return false
+    // MODIFIES: EmployeeManager
+    // EFFECTS: Checks if there is a regular employee with at least 6 experience scheduled at the same time as a
+    //          training employee, if true then add the trainee to the schedule return true. Set job field of
+    //          employee as Trainee.
     public boolean addTrainingEmployee(TrainingEmployee te) {
         return employeeManager.addTrainingEmployee(te);
     }
 
     //EFFECTS: saves employee data from a list to outputfile.txt 
     public void save() throws FileNotFoundException, UnsupportedEncodingException {
-        writer = new PrintWriter("outputfile.txt", "UTF-8");
+        PrintWriter writer = new PrintWriter("outputfile.txt", "UTF-8");
         for (Employee e : getEmployees()) {
             Job job = e.getJob();
             writer.println(e.getName() + " " + e.getDayWorking() + " " + e.getShift() + " "

@@ -1,25 +1,5 @@
 package tests;
 
-import model.Employee;
-import exceptions.NegativeInputException;
-import model.RegularEmployee;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import ui.Saveable;
-import ui.WorkScheduler;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class TestSaveable {
 //    Saveable workScheduler;
 //    PrintWriter writer;

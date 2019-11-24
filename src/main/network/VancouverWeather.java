@@ -11,7 +11,6 @@ public class VancouverWeather extends Subject {
     private String apiKey;
     private StringBuilder apiJson;
     private BufferedReader br;
-    private ArrayList<Double> minMaxTemp;
 
     public VancouverWeather() {
         apiKey = "96a13e0f1cf25f5cdab7aaa826e95330";
@@ -33,8 +32,7 @@ public class VancouverWeather extends Subject {
         result.add(Double.parseDouble(apiJson.substring(maxTempIndex + startOfTemp, maxTempIndex + endOfTemp)
             ) - conversionFactor);
 
-        minMaxTemp = result;
-        notifyObservers(minMaxTemp);
+        notifyObservers(result);
     }
 
     //MODIFIES: this
