@@ -45,9 +45,11 @@ public class TestJob {
     }
 
     @Test
-    public void testSetAndGetDifficulty() {
-        job.setDifficulty(-10);
-        assertEquals(0, job.getDifficulty());
+    public void testSetAndGetDifficulty() throws NegativeInputException {
+        try {
+            job.setDifficulty(-10);
+            fail("Did not catch exception");
+        } catch (NegativeInputException e) {}
         job.setDifficulty(0);
         assertEquals(0, job.getDifficulty());
         job.setDifficulty(3);

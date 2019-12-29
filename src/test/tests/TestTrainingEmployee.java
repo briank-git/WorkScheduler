@@ -24,7 +24,7 @@ public class TestTrainingEmployee {
         re.setName("rich");
         re.setDayWorking("Wed");
         re.setShift("graveyard");
-        re.setExperience(5);
+        re.setExperience(6);
         assertTrue(te.isSuitableTrainer(re));
     }
 

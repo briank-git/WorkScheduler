@@ -26,9 +26,9 @@ public class Job {
 
     //MODIFIES: this
     //EFFECTS: sets field difficulty to a positive integer or zero
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(int difficulty) throws NegativeInputException {
         if (difficulty < 0) {
-            this.difficulty = 0;
+            throw new NegativeInputException();
         } else {
             this.difficulty = difficulty;
         }
